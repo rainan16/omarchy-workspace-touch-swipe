@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Test
+        run: |
+          node --test --test-reporter spec \
+            --test-reporter-destination stdout \
+            --test-reporter junit \
+            --test-reporter-destination test-results.xml \
+            test/gesture-model.js test/gesture-flow.js \
+            test/bump-manifest.js test/release-config.js test/plugin-contract.js
+
+      - name: Publish test summary
+        if: always()
+        run: |
+          node -e '
+            var fs = require("fs")
+            var xml = ""
+            try { xml = fs.readFileSync("test-results.xml", "utf8") } catch (e) {}
+            var n = function (label) {
+              var m = xml.match(new RegExp("<!-- " + label + " (\\d+) -->"))
+              return m ? Number(m[1]) : 0
+            }
+            var tests = n("tests")
+            var passed = n("pass")
+            var failures = n("fail")
+            var line = passed + " passed, " + failures + " failed"
+            if (process.env.GITHUB_STEP_SUMMARY) {
+              fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,
+                "## Tests\n\n**" + passed + " passed**, " + failures + " failed (" + tests + " total)\n")
+            }
+            console.log(failures ? "::error title=Tests::" + line : "::notice title=Tests::" + line)
+            console.log(line)
+          '
+
+  qmllint:
+    runs-on: ubuntu-latest
+    container: archlinux:latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Install packages
+        run: |
+          pacman -Sy --noconfirm archlinux-keyring
+          pacman -Syu --noconfirm git qt6-declarative quickshell
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Checkout Omarchy shell
+        uses: actions/checkout@v4
+        with:
+          repository: omacom/omarchy
+          ref: quattro
+          path: .ci/omarchy
+          persist-credentials: false
+          sparse-checkout: shell
+          fetch-depth: 1
+
+      - name: qmllint
+        run: |
+          mkdir -p .ci/qml/qs
+          ln -s "$PWD/.ci/omarchy/shell/Commons" .ci/qml/qs/Commons
+          ln -s "$PWD/.ci/omarchy/shell/Ui" .ci/qml/qs/Ui
+          /usr/lib/qt6/bin/qmllint -I "$PWD/.ci/qml" Service.qml Overlay.qml
