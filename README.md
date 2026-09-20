@@ -18,7 +18,7 @@ Development status: Tested only on a Microsoft Surface Go 2 (SKU 1926, ELAN9038)
 - one finger, right edge, swipe left → next workspace
 - live workspace preview overlay after a swipe (OSD if overlay is off)
 
-Edge strips consume the outer ~4% of screen width; apps do not see those touches. Strips skip the bar exclusive zone (inset off a top/bottom bar; hidden on a left/right bar). While the overlay is open it still accepts edge swipes.
+Idle edge strips stay ~4% wide so a swipe can be tracked, but only a slim outer hit band (~0.8% of width) takes input. Mouse clicks and hover reach app buttons (Chrome back, etc.). A touch on that hit band grabs the rest of the strip until release. Strips skip the bar exclusive zone (inset off a top/bottom bar; hidden on a left/right bar). While the overlay is open it still accepts edge swipes.
 
 Two-finger swipes anywhere (needs the `input` group) are a separate plugin: [omarchy-workspace-touch-switch](https://github.com/rainan16/omarchy-workspace-touch-switch).
 

@@ -101,9 +101,22 @@ Item {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     exclusionMode: ExclusionMode.Ignore
+    mask: leftPoint.pressed ? null : leftHitMask
+
+    Region {
+      id: leftHitMask
+      item: leftHit
+    }
+
+    Item {
+      id: leftHit
+      anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
+      width: GestureModel.edgeHitWidth(leftStrip.screen ? leftStrip.screen.width : 0)
+    }
 
     MultiPointTouchArea {
       anchors.fill: parent
+      mouseEnabled: false
       maximumTouchPoints: 1
       touchPoints: [ TouchPoint { id: leftPoint } ]
       onReleased: root.handleStripRelease(
@@ -124,9 +137,22 @@ Item {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
     exclusionMode: ExclusionMode.Ignore
+    mask: rightPoint.pressed ? null : rightHitMask
+
+    Region {
+      id: rightHitMask
+      item: rightHit
+    }
+
+    Item {
+      id: rightHit
+      anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
+      width: GestureModel.edgeHitWidth(rightStrip.screen ? rightStrip.screen.width : 0)
+    }
 
     MultiPointTouchArea {
       anchors.fill: parent
+      mouseEnabled: false
       maximumTouchPoints: 1
       touchPoints: [ TouchPoint { id: rightPoint } ]
       onReleased: root.handleStripRelease(
@@ -262,6 +288,7 @@ Item {
     MultiPointTouchArea {
       anchors { top: parent.top; bottom: parent.bottom; left: parent.left }
       width: GestureModel.edgeWidth(panel.screen ? panel.screen.width : 0)
+      mouseEnabled: false
       maximumTouchPoints: 1
       touchPoints: [ TouchPoint { id: panelLeftPoint } ]
       onReleased: root.handleStripRelease(
@@ -273,6 +300,7 @@ Item {
     MultiPointTouchArea {
       anchors { top: parent.top; bottom: parent.bottom; right: parent.right }
       width: GestureModel.edgeWidth(panel.screen ? panel.screen.width : 0)
+      mouseEnabled: false
       maximumTouchPoints: 1
       touchPoints: [ TouchPoint { id: panelRightPoint } ]
       onReleased: root.handleStripRelease(

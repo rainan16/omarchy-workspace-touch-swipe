@@ -73,7 +73,7 @@ Copy first-party services (`idle`, `battery`, `media`), not bar widgets.
 - This Hyprland is Lua (0.56). `hyprctl dispatch workspace e+1` fails with `')' expected near 'e'`. OSD will still show the current workspace. First-party bar uses `hl.dsp.focus({ workspace = "…" })`. `Hyprland.dispatch` talks IPC with that string. Do not spawn `hyprctl` for this.
 - QML `import "GestureModel.js"` is cached. File copy + rescan often leaves the old mapping. `omarchy restart shell` after Service.qml or GestureModel.js changes.
 - End-user README Install is only `omarchy plugin add … --enable`. Official add clones, validates, rescans, and enables. Do not put `omarchy restart shell` or the `input` group there. Restart after QML/JS is a local-dev cache issue, not first install.
-- Strips consume the edge band (~4% of width). They must not cover the bar: inset `PanelWindow.margins` from `GestureModel.edgeInsets(reserved)` and hide a strip when that edge is the bar. The overlay panel must handle swipes while open.
+- Idle strips are ~4% wide for swipe tracking, but the input region is `GestureModel.edgeHitWidth` (~0.8%) so app edge buttons stay clickable. `mask` is the hit sliver until a touch is down (`mouseEnabled: false`). They must not cover the bar: inset `PanelWindow.margins` from `GestureModel.edgeInsets(reserved)` and hide a strip when that edge is the bar. The overlay panel must handle swipes while open.
 - `Hyprland.focusedMonitor.width/height` are physical pixels. Client `at`/`size` and monitor `x`/`y` are layout. `windowRect` needs `width/scale` and `height/scale`. Scale 1 hides half-size previews stuck in the card's top-left.
 
 ## Security
