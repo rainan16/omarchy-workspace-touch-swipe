@@ -25,6 +25,19 @@ function edgeWidth(screenW, edgeRatio) {
   return Number(screenW) * Number(ratio)
 }
 
+function edgeHitWidth(screenW, hitRatio) {
+  var ratio = hitRatio
+  if (ratio === undefined || ratio === null)
+    ratio = 0.008
+  var n = Number(screenW) * Number(ratio)
+  var cap = edgeWidth(screenW)
+  if (!isFinite(n) || n < 0)
+    return 0
+  if (n > cap)
+    return cap
+  return n
+}
+
 function swipeMin(screenW, swipeRatio) {
   var ratio = swipeRatio
   if (ratio === undefined || ratio === null)
@@ -193,6 +206,7 @@ if (typeof module !== "undefined") {
     osdEnabled: osdEnabled,
     overlayEnabled: overlayEnabled,
     edgeWidth: edgeWidth,
+    edgeHitWidth: edgeHitWidth,
     swipeMin: swipeMin,
     classifyEdgeSwipe: classifyEdgeSwipe,
     osdAfterSwipe: osdAfterSwipe,

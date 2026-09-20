@@ -41,6 +41,14 @@ test("edgeWidth and swipeMin", function () {
   assert.strictEqual(GestureModel.swipeMin(1000, 0.1), 100)
 })
 
+test("edgeHitWidth is a slim outer band inside edgeWidth", function () {
+  assert.strictEqual(GestureModel.edgeHitWidth(1000), 8)
+  assert.strictEqual(GestureModel.edgeHitWidth(1000, 0.02), 20)
+  assert.ok(GestureModel.edgeHitWidth(1000) < GestureModel.edgeWidth(1000))
+  assert.strictEqual(GestureModel.edgeHitWidth(1000, 0.5), GestureModel.edgeWidth(1000))
+  assert.strictEqual(GestureModel.edgeHitWidth(0), 0)
+})
+
 test("classifyEdgeSwipe", function () {
   assert.deepStrictEqual(
     GestureModel.classifyEdgeSwipe("left", 20, 200, 500, 500, 1000, 1000),
