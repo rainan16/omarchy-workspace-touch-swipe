@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/rainan16/omarchy-workspace-touch-swipe/compare/v1.0.0...v1.0.1) (2026-09-20)
+
+
+### Bug Fixes
+
+* pass mouse through idle edge strips ([#2](https://github.com/rainan16/omarchy-workspace-touch-swipe/issues/2)) ([22511b0](https://github.com/rainan16/omarchy-workspace-touch-swipe/commit/22511b0eaf9eb521b818760b3b9a908c7dd00a62)), closes [#1](https://github.com/rainan16/omarchy-workspace-touch-swipe/issues/1)
+
 # 1.0.0 (2026-09-04)
 
 
